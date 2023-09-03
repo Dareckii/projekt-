@@ -1,0 +1,2 @@
+# projekt-
+sql+python
