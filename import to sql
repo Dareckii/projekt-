@@ -1,0 +1,33 @@
+from data_generator import generate_cnc_data
+num_entries = 10
+generated_data = generate_cnc_data(num_entries)
+print(generated_data)
+
+
+import mysql.connector
+
+# Tworzenie lub łączenie z bazą danych
+conn = mysql.connector.connect('cnc_data.sql')
+c = conn.cursor()
+
+# Tworzenie tabeli w bazie danych
+c.execute('''CREATE TABLE IF NOT EXISTS cnc_data
+             (timestamp TEXT, tool TEXT, operation TEXT, duration REAL, error INTEGER)''')
+
+# Eksportowanie danych z symulowanego źródła (sample_data)
+sample_data = generate_cnc_data(20)
+
+# Przetwarzanie i ładowanie danych do bazy
+for entry in sample_data:
+    timestamp = entry["timestamp"]
+    tool = entry["tool"]
+    operation = entry["operation"]
+    duration = entry["duration"]
+    error = 1 if entry["error"] else 0  # Zamiana True na 1, False na 0
+
+    # Wstawianie przetworzonych danych do tabeli
+    c.execute('INSERT INTO cnc_data VALUES (?, ?, ?, ?, ?)', (timestamp, tool, operation, duration, error))
+
+# Zatwierdzanie zmian i zamykanie połączenia
+conn.commit()
+conn.close()
