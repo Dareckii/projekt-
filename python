@@ -1,3 +1,4 @@
+#generowanie "danych" na których będe pracować
 import random
 import datetime
 
