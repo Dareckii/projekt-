@@ -1,0 +1,42 @@
+# utworzenie bazy, wybranie, zrobienie kolumn.
+CREATE DATABASE cnc_data;
+USE cnc_data;
+CREATE TABLE IF NOT EXISTS cnc_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    timestamp TIMESTAMP,
+    tool VARCHAR(255),
+    operation VARCHAR(255),
+    duration DECIMAL(10, 2),
+    error BOOLEAN
+);
+SELECT SUM(duration) AS total_downtime
+FROM cnc_data
+WHERE operation = 'idle';
+
+
+SELECT AVG(duration) AS avg_downtime
+FROM cnc_data
+WHERE operation = 'idle';
+# to to samo ale tutaj liczmy średnią 
+
+SELECT AVG(tool_count) AS avg_tool_usage
+FROM (
+    SELECT COUNT(DISTINCT tool) AS tool_count
+    FROM cnc_data
+    GROUP BY timestamp
+) AS tool_counts;
+
+
+SELECT
+    SUM(CASE WHEN error = 1 THEN 1 ELSE 0 END) AS error_count,
+    SUM(CASE WHEN error = 0 THEN 1 ELSE 0 END) AS no_error_count,
+    (SUM(CASE WHEN error = 0 THEN 1 ELSE 0 END) / COUNT(*)) AS success_rate
+FROM cnc_data;
+
+
+SELECT AVG(duration) AS avg_operation_duration
+FROM cnc_data
+WHERE operation <> 'idle';
+
+
+
