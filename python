@@ -1,0 +1,33 @@
+import random
+import datetime
+
+# Symulowane narzędzia i operacje
+tools = ["Wiertło", "Frez16", "Gwintownik"]
+operations = ["Wiercenie", "Frezowanie", "Tokarka"]
+
+# Generowanie losowych danych
+def generate_cnc_data(num_entries):
+    data = []
+    for v in range(num_entries):
+        timestamp = datetime.datetime.now()
+        tool = random.choice(tools)
+        operation = random.choice(operations)
+        duration = random.uniform(1.0, 60.0)  # Czas trwania operacji w minutach
+        error = random.choice([True, False])
+        
+        entry = {
+            "timestamp": timestamp,
+            "tool": tool,
+            "operation": operation,
+            "duration": duration,
+            "error": error
+        }
+        data.append(entry)
+    return data
+
+# Generowanie 20 przykładowych wpisów
+sample_data = generate_cnc_data(20)
+
+# Wydrukuj wygenerowane dane
+for entry in sample_data:
+    print(entry)
